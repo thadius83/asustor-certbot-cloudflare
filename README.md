@@ -1,3 +1,12 @@
+Updated 27/05/2024 to work with ADM 4.x as some locations have change.
+
+Requires Python to be installed either via CLI or the ADM interface
+Verified working on ASUSTOR 6706T ADM 4.3.0.RSB1
+
+I'm sure it can be done cleaner and more automated but this was simple.
+
+This particular setup utilises cloudflare dns challenge + API key for certificate validation
+
 # asustor-certbot
 Automated [Let's Encrypt](https://letsencrypt.org/) certificate renewal via [certbot](https://certbot.eff.org/docs/) on an Asustor NAS box
 
@@ -40,17 +49,21 @@ Why does this even exist when there's a certificate management built into the AD
 8. chmod 600 /usr/builtin/etc/letsencrypt/cloudflare.ini
 9. pip / pip3 install certbot-dns-cloudflare
 10. Run the initial generation of the cert - /usr/local/AppCentral/python3/bin/certbot certonly --config-dir /volume0/usr/builtin/etc/letsencrypt --dns-cloudflare --dns-cloudflare-credentials /usr/builtin/etc/letsencrypt/cloudflare.ini -d hostname.domain.com --dns-cloudflare-propagation-seconds 60 --agree-tos -m user@email.xyz
-11. 
+11. deploy nas-certbot-renewal.sh to /volume0/usr/builtin/bin
+12. deploy nas-certbot-deploy.sh to /volume0/usr/builtin/etc/letsencrypt/renewal-hooks/post/
+13. chmod +x nas-certbot-renewal.sh & nas-certbot-deploy.sh
+14. change SOURCE_CERT=/live/your-cert-domain.net to your domain in nas-certbot-deploy.sh
+15. Add the following line to crontab -e : 0 2 * * * /usr/builtin/bin/nas-certbot-renewal.sh
 
 Note that depending on your Asustor NAS box model and the available tools installed on the NAS box, Certbot installation might not be straightforward. See further details [here](https://github.com/jjssoftware/asustor-certbot/blob/master/CertbotInstallation.md).
 
-On my AS-202TE, certbot is located here after installation: `/usr/local/AppCentral/python/bin/certbot`.
+
 
 #### Shell scripts included in this github repo ####
-1. https://github.com/jjssoftware/asustor-certbot/blob/master/nas-certbot-renewal.sh
+1. nas-certbot-renewal.sh
 
    This is a certbot [Let's Encrypt](https://letsencrypt.org/) certificate renewal script. It simply calls certbot to perform certificate renewal for any certificates previously created by certbot. This script can be crontab scheduled. Further details are in the script.
 
-2. https://github.com/jjssoftware/asustor-certbot/blob/master/nas-certbot-deploy.sh
+2. master/nas-certbot-deploy.sh
 
    This is a certbot renewal-hooks/deploy script. This script is called by certbot when certificate renewal succeeds. Any custom actions that need to be performed upon successful certificate renewal can be included in a renewal-hooks/deploy script. Further details are in the script.
