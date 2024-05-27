@@ -18,7 +18,8 @@
 # CERTBOT_RENEW -> the certbot renewal command. 
 # Note that calling certbot with the "renew" option causes certbot to use the renewal .conf configuration files present
 # in the /etc/letsencrypt/renewal directory that are/were created at original cert creation time
-CERTBOT_RENEW="/usr/local/AppCentral/python/bin/certbot renew --config-dir /volume0/usr/builtin/etc/letsencrypt --http-01-port 51080 --preferred-challenges=http --max-log-backups 30"
+CERTBOT_RENEW="/usr/local/AppCentral/python3/bin/certbot renew --config-dir /volume0/usr/builtin/etc/letsencrypt --dns-cloudflare --dns-cloudflare-credenti
+als /usr/builtin/etc/letsencrypt/cloudflare.ini  --dns-cloudflare-propagation-seconds 60  --max-log-backups 30"
 RENEWAL_SUCCESS="Congratulations, all renewals succeeded"
 
 RENEW_RESULT=`$CERTBOT_RENEW`
