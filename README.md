@@ -33,6 +33,14 @@ Why does this even exist when there's a certificate management built into the AD
 1. certbot is written in python, install python from App Central and verify the install `python --version`.
 2. once you have python installed check you have pip installed i.e. `pip --version`.
 3. install certbot with pip i.e. `pip install cryptography` && `pip install certbot`.
+4. create Cloud Flare API key with edit zone permissions
+5. mkdir /usr/builtin/etc/letsencrypt/
+6. create cloudflare.ini in /usr/builtin/etc/letsencrypt/
+7. add API key to cloudflare.ini
+8. chmod 600 /usr/builtin/etc/letsencrypt/cloudflare.ini
+9. pip / pip3 install certbot-dns-cloudflare
+10. Run the initial generation of the cert - /usr/local/AppCentral/python3/bin/certbot certonly --config-dir /volume0/usr/builtin/etc/letsencrypt --dns-cloudflare --dns-cloudflare-credentials /usr/builtin/etc/letsencrypt/cloudflare.ini -d hostname.domain.com --dns-cloudflare-propagation-seconds 60 --agree-tos -m user@email.xyz
+11. 
 
 Note that depending on your Asustor NAS box model and the available tools installed on the NAS box, Certbot installation might not be straightforward. See further details [here](https://github.com/jjssoftware/asustor-certbot/blob/master/CertbotInstallation.md).
 
