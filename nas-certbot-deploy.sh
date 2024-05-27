@@ -20,9 +20,12 @@ ADM_WEB_SERVICE=/etc/init.d/S41lighttpd             # the ADM lighttpd service c
 #create a lighttpd "compatible" cert by combining the private key and the cert together and 
 #then update the lighttpd ssl cert with that
 cat $CONFIG_DIR$SOURCE_CERT/privkey.pem $CONFIG_DIR$SOURCE_CERT/cert.pem > $CONFIG_DIR$SOURCE_CERT/lighthttpd.pem
-cp -L -f $CONFIG_DIR$SOURCE_CERT/lighttpd.pem $ADM_TARGET/ssl.pem
+cp -L -f $CONFIG_DIR$SOURCE_CERT/lighthttpd.pem $ADM_TARGET/ssl.pem
 
 cp -L -f $CONFIG_DIR$SOURCE_CERT/fullchain.pem $ADM_TARGET/lighttpd.chain
 
+
 #restart lighttpd
-$ADM_WEB_SERVICE restart
+$ADM_WEB_SERVICE stop
+sleep 10s
+$ADM_WEB_SERVICE start
