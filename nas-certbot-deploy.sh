@@ -14,13 +14,15 @@
 
 CONFIG_DIR=/volume0/usr/builtin/etc/letsencrypt     # the certbot --config-dir
 SOURCE_CERT=/live/your-cert-domain.net              # a source letsencrypt certificate to perform actions with
-ADM_TARGET=/volume0/usr/etc/lighttpd                # the ADM lighttpd web server ssl cert target directory
+ADM_TARGET=/usr/builtin/etc/certificate                # the ADM lighttpd web server ssl cert target directory
 ADM_WEB_SERVICE=/etc/init.d/S41lighttpd             # the ADM lighttpd service control script
 
 #create a lighttpd "compatible" cert by combining the private key and the cert together and 
 #then update the lighttpd ssl cert with that
-cat $CONFIG_DIR$SOURCE_CERT/privkey.pem $CONFIG_DIR$SOURCE_CERT/cert.pem > $CONFIG_DIR$SOURCE_CERT/lighttpd.pem
-cp -L -f $CONFIG_DIR$SOURCE_CERT/lighttpd.pem $ADM_TARGET/lighttpd.pem
+cat $CONFIG_DIR$SOURCE_CERT/privkey.pem $CONFIG_DIR$SOURCE_CERT/cert.pem > $CONFIG_DIR$SOURCE_CERT/lighthttpd.pem
+cp -L -f $CONFIG_DIR$SOURCE_CERT/lighttpd.pem $ADM_TARGET/ssl.pem
+
+cp -L -f $CONFIG_DIR$SOURCE_CERT/fullchain.pem $ADM_TARGET/lighttpd.chain
 
 #restart lighttpd
 $ADM_WEB_SERVICE restart
