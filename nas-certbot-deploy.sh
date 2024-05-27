@@ -27,5 +27,8 @@ cp -L -f $CONFIG_DIR$SOURCE_CERT/fullchain.pem $ADM_TARGET/lighttpd.chain
 
 #restart lighttpd
 $ADM_WEB_SERVICE stop
-sleep 10s
+sleep 20s
 $ADM_WEB_SERVICE start
+
+#### Custom Commands
+#docker restart PortainerCE
