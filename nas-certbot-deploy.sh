@@ -22,7 +22,7 @@ ADM_WEB_SERVICE=/etc/init.d/S41lighttpd             # the ADM lighttpd service c
 cat $CONFIG_DIR$SOURCE_CERT/privkey.pem $CONFIG_DIR$SOURCE_CERT/cert.pem > $CONFIG_DIR$SOURCE_CERT/lighthttpd.pem
 cp -L -f $CONFIG_DIR$SOURCE_CERT/lighthttpd.pem $ADM_TARGET/ssl.pem
 
-cp -L -f $CONFIG_DIR$SOURCE_CERT/fullchain.pem $ADM_TARGET/lighttpd.chain
+cp -L -f $CONFIG_DIR$SOURCE_CERT/fullchain.pem $ADM_TARGET/ssl.chain
 
 
 #restart lighttpd
