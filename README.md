@@ -7,7 +7,7 @@ I'm sure it can be done cleaner and more automated but this was simple.
 
 This particular setup utilises cloudflare dns challenge + API key for certificate validation
 
-# Copy and edit files via ssh as root to your NAS 
+### Copy and edit files via ssh as root to your NAS 
 
 Copy nas-certbot-renewal.sh to
 ```
@@ -34,12 +34,12 @@ dns_cloudflare_api_token = <cloudflare-token-needs-to-have-read-write-dns-for-th
 ```
 
 
-# Create crontab entry 
+### Create crontab entry 
 ```
 0 2  * * * /volume0/usr/builtin/etc/letsencrypt/nas-certbot-renewal.sh
 ```
 
-# Run the initial cert creation
+### Run the initial cert creation
 
 ```
 /usr/local/AppCentral/python3/bin/certbot certonly --config-dir /volume0/usr/builtin/etc/letsencrypt --dns-cloudflare --dns-cloudflare-credentials /usr/builtin/etc/letsencrypt/cloudflare.ini -d hostname.domain.com --dns-cloudflare-propagation-seconds 60 --agree-tos -m user@email.xyz
@@ -48,7 +48,7 @@ dns_cloudflare_api_token = <cloudflare-token-needs-to-have-read-write-dns-for-th
 Logs are stored in /var/log/letsencrypt/letsencrypt.log
 
 
-# From forked repo - most doesn't apply to the modified version
+## From forked repo - most doesn't apply to the modified version
 
 
 # asustor-certbot
