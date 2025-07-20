@@ -14,6 +14,11 @@ Copy nas-certbot-renewal.sh to
 Copy nas-certbot-deploy.sh to 
 ````
 /volume0/usr/builtin/etc/letsencrypt/renewal-hooks/post/nas-certbot-deploy.sh
+
+Edit the following line to your.domain.com
+
+SOURCE_CERT=$CONFIG_DIR/live/your.domain.com 
+
 ````
 Create cloudflare.ini in 
 ```
