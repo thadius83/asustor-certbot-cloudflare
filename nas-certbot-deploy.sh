@@ -2,33 +2,41 @@
 
 # An asustor NAS Let's Encrypt certificate renewal deploy shell script.
 #
-# Dependencies: 
+# Dependencies:
 #   A certbot --config-dir/renewal-hooks/deploy directory to host this script
 #
-# When this shell script is present in the certbot --config-dir/renewal-hooks/deploy, it will be called 
+# When this shell script is present in the certbot --config-dir/renewal-hooks/deploy, it will be called
 # by certbot upon successful renewal only
-# This script can be used to automate actions that need to be performed upon post renewal success 
+# This script can be used to automate actions that need to be performed upon post renewal success
 # i.e. certificate copy / service restart etc
 #
 # certbot docs are here: https://certbot.eff.org/docs/using.html
 
-CONFIG_DIR=/volume0/usr/builtin/etc/letsencrypt     # the certbot --config-dir
-SOURCE_CERT=/live/your-cert-domain.net              # a source letsencrypt certificate to perform actions with
-ADM_TARGET=/usr/builtin/etc/certificate                # the ADM lighttpd web server ssl cert target directory
-ADM_WEB_SERVICE=/etc/init.d/S41lighttpd             # the ADM lighttpd service control script
 
-#create a lighttpd "compatible" cert by combining the private key and the cert together and 
-#then update the lighttpd ssl cert with that
-cat $CONFIG_DIR$SOURCE_CERT/privkey.pem $CONFIG_DIR$SOURCE_CERT/cert.pem > $CONFIG_DIR$SOURCE_CERT/lighthttpd.pem
-cp -L -f $CONFIG_DIR$SOURCE_CERT/lighthttpd.pem $ADM_TARGET/ssl.pem
+# Asustor NAS Let's Encrypt certificate renewal deploy script
 
-cp -L -f $CONFIG_DIR$SOURCE_CERT/fullchain.pem $ADM_TARGET/ssl.chain
+CONFIG_DIR=/volume0/usr/builtin/etc/letsencrypt  # certbot --config-dir
+SOURCE_CERT=$CONFIG_DIR/live/domain.com       # Path to issued certs !!!!CHANGE TO YOUR DOMAIN!!!!
+ADM_TARGET=/usr/builtin/etc/certificate          # Lighttpd SSL cert directory
+ADM_WEB_SERVICE=/etc/init.d/S41lighttpd          # Lighttpd service
 
+# Create a Lighttpd-compatible certificate (server cert + key)
+cat $SOURCE_CERT/privkey.pem $SOURCE_CERT/cert.pem > $SOURCE_CERT/lighthttpd.pem
 
-#restart lighttpd
+# Copy the new certificates to the Lighttpd certificate path
+cp -L -f $SOURCE_CERT/lighthttpd.pem $ADM_TARGET/ssl.pem
+cp -L -f $SOURCE_CERT/fullchain.pem $ADM_TARGET/ssl.chain
+
+# Fix permissions
+chmod 600 $ADM_TARGET/ssl.pem
+chmod 600 $ADM_TARGET/ssl.chain
+chown root:root $ADM_TARGET/ssl.pem
+chown root:root $ADM_TARGET/ssl.chain
+
+# Restart Lighttpd
 $ADM_WEB_SERVICE stop
-sleep 20s
+sleep 5
 $ADM_WEB_SERVICE start
 
-#### Custom Commands
-#docker restart PortainerCE
+# Restart any dependent services (optional)
+# docker restart PortainerCE
