@@ -1,4 +1,4 @@
-Updated 27/05/2024 to work with ADM 4.x as some locations have change.
+Updated 27/05/2025 to work with ADM 4.x as some locations have changed.
 
 Requires Python to be installed either via CLI or the ADM interface
 Verified working on ASUSTOR 6706T ADM 4.3.0.RSB1
@@ -6,6 +6,36 @@ Verified working on ASUSTOR 6706T ADM 4.3.0.RSB1
 I'm sure it can be done cleaner and more automated but this was simple.
 
 This particular setup utilises cloudflare dns challenge + API key for certificate validation
+
+Copy nas-certbot-renewal.sh to
+```
+/volume0/usr/builtin/etc/letsencrypt/nas-certbot-renewal.sh
+```
+Copy nas-certbot-deploy.sh to 
+````
+/volume0/usr/builtin/etc/letsencrypt/renewal-hooks/post/nas-certbot-deploy.sh
+````
+Create cloudflare.ini in 
+```
+/usr/builtin/etc/letsencrypt/
+```
+
+```
+root@NAS:/volume1/.@root # cat /usr/builtin/etc/letsencrypt/cloudflare.ini
+# /usr/builtin/etc/cloudflare.ini
+dns_cloudflare_api_token = <cloudflare-token-needs-to-have-read-write-dns-for-the-domain>
+```
+
+
+Create crontab entry 
+```
+0 2  * * * /volume0/usr/builtin/etc/letsencrypt/nas-certbot-renewal.sh
+```
+Logs are stored in /var/log/letsencrypt/letsencrypt.log
+
+
+# From forked repo - most doesn't apply to the modified version
+
 
 # asustor-certbot
 Automated [Let's Encrypt](https://letsencrypt.org/) certificate renewal via [certbot](https://certbot.eff.org/docs/) on an Asustor NAS box
